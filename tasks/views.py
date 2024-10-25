@@ -1,9 +1,10 @@
+from .models import Task
+from .forms import TaskForm
 from django.db import IntegrityError
-from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
+from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from .forms import TaskForm
 
 
 # Create your views here.
@@ -39,7 +40,8 @@ def signup(request):
 
 
 def tasks(request):
-    return render(request, "tasks.html")
+    tasks = Task.objects.filter(user=request.user)
+    return render(request, "tasks.html", {"tasks": tasks})
 
 
 def create_task(request):

@@ -2,7 +2,7 @@ from .models import Task
 from .forms import TaskForm
 from django.db import IntegrityError
 from django.contrib.auth.models import User
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 
@@ -40,7 +40,7 @@ def signup(request):
 
 
 def tasks(request):
-    tasks = Task.objects.filter(user=request.user)
+    tasks = Task.objects.filter(user=request.user, datecompleted__isnull=True)
     return render(request, "tasks.html", {"tasks": tasks})
 
 
@@ -61,6 +61,11 @@ def create_task(request):
                 "create_task.html",
                 {"form": TaskForm, "error": "Please provide valida data"},
             )
+
+
+def task_detail(request, task_id):
+    task = get_object_or_404(Task, pk=task_id)
+    return render(request, "task_detail.html", {"task": task})
 
 
 def signout(request):
